@@ -12,3 +12,7 @@ wheels/
 # Python tools
 .*_cache
 .python-version
+
+# Secrets
+openrouter_api_key.txt
+.env
