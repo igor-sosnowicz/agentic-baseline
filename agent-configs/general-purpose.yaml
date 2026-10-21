@@ -1,6 +1,8 @@
 name: general-purpose
-model: z-ai/glm-5.3-flash
-reasoning_effort: medium # "none" to disable
-tools: [find_websites, access_website]
+model: gemini-2.5-flash
+reasoning_effort: medium
+tools:
+  - find_websites
+  - access_website
 system_prompt_path: ./prompts/general-purpose.md
-agent_state: GeneralAgentState # A class name from `agentic_baseline.agent_states`.
+agent_state: GeneralAgentState
