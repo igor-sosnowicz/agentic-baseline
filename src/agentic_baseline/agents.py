@@ -5,15 +5,17 @@ import yaml
 from langchain.agents import AgentState, create_agent
 from langchain.agents.middleware.types import InputAgentState, OutputAgentState
 from langchain.tools import BaseTool
-from langchain_openrouter import ChatOpenRouter
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.graph.state import CompiledStateGraph
 from pydantic import BaseModel
 
 from agentic_baseline.constants import AGENTS_CONFIGURATION_DIRECTORY
 from agentic_baseline.data_types import AgentConfig
 
+from langchain_mcp_adapters.client import MultiServerMCPClient
 
-def build_agent(
+
+async def build_agent(
     agent_config: AgentConfig | str,
 ) -> CompiledStateGraph[
     AgentState[BaseModel],
@@ -40,14 +42,20 @@ def build_agent(
         else None
     )
 
-    model = ChatOpenRouter(
-        model=agent_config.model,
-        reasoning=reasoning,
+    model = ChatGoogleGenerativeAI(
+        model="gemini-2.5-flash",
+        temperature=0,
     )
+
+    mcp_tools = await load_mcp_tools()
+
+    print("Narzędzia pobrane z MCP:")
+    for tool in mcp_tools:
+        print(f"- {tool.name}")
 
     return create_agent(
         model=model,
-        tools=agent_config.tools,
+        tools=mcp_tools,
         state_schema=agent_config.agent_state,
         system_prompt=agent_config.get_system_prompt(),
         response_format=agent_config.response_format,
@@ -110,3 +118,21 @@ def _resolve_tool_by_name(tool_name: str) -> BaseTool:
             expected_type=BaseTool,
         ),
     )
+
+async def load_mcp_tools():
+    client = MultiServerMCPClient(
+        {
+            "baseline": {
+                "transport": "stdio",
+                "command": "uv",
+                "args": [
+                    "run",
+                    "python",
+                    "-m",
+                    "agentic_baseline.mcp_server",
+                ],
+            }
+        }
+    )
+
+    return await client.get_tools()
