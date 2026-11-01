@@ -13,6 +13,7 @@ dependencies = [
     "langchain-google-genai>=4.4.2",
     "langchain-openrouter>=0.2.9",
     "langgraph>=1.2.16",
+    "loguru>=0.7.3",
     "pydantic>=2.14.1",
     "python-dotenv>=1.2.4",
     "pyyaml>=6.0.3",

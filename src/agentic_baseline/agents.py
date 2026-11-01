@@ -9,6 +9,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_openrouter import ChatOpenRouter
 from langgraph.graph.state import CompiledStateGraph
 from pydantic import BaseModel
+from loguru import logger
 
 from agentic_baseline.constants import AGENTS_CONFIGURATION_DIRECTORY
 from agentic_baseline.data_types import AgentConfig
@@ -45,7 +46,7 @@ async def build_agent(
     tools = agent_config.tools
 
     for tool in tools:
-        print(f"- {tool.name}")
+        logger.info("Available tool: {}", tool.name)
 
     return create_agent(
         model=model,

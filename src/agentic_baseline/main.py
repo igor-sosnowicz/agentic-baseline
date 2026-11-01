@@ -4,6 +4,8 @@ import asyncio
 from dotenv import load_dotenv
 from langchain_core.messages import AIMessage
 
+from loguru import logger
+
 from agentic_baseline.agents import build_agent
 
 
@@ -29,7 +31,7 @@ async def main() -> None:
 
     for message in reversed(response["messages"]):
         if isinstance(message, AIMessage) and not message.tool_calls:
-            print(message.text)
+            logger.info(message.text)
             break
 
 
