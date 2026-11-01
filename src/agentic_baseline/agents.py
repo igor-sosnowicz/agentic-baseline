@@ -5,15 +5,16 @@ import yaml
 from langchain.agents import AgentState, create_agent
 from langchain.agents.middleware.types import InputAgentState, OutputAgentState
 from langchain.tools import BaseTool
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_openrouter import ChatOpenRouter
 from langgraph.graph.state import CompiledStateGraph
 from pydantic import BaseModel
+from loguru import logger
 
 from agentic_baseline.constants import AGENTS_CONFIGURATION_DIRECTORY
 from agentic_baseline.data_types import AgentConfig
 
-
-def build_agent(
+async def build_agent(
     agent_config: AgentConfig | str,
 ) -> CompiledStateGraph[
     AgentState[BaseModel],
@@ -40,19 +41,38 @@ def build_agent(
         else None
     )
 
-    model = ChatOpenRouter(
-        model=agent_config.model,
-        reasoning=reasoning,
-    )
+    model = _build_chat_model(agent_config)
+
+    tools = agent_config.tools
+
+    for tool in tools:
+        logger.info("Available tool: {}", tool.name)
 
     return create_agent(
         model=model,
-        tools=agent_config.tools,
+        tools=tools,
         state_schema=agent_config.agent_state,
         system_prompt=agent_config.get_system_prompt(),
         response_format=agent_config.response_format,
     )
 
+def _build_chat_model(agent_config: AgentConfig):
+    provider = agent_config.model_provider.lower()
+    model_name = agent_config.model
+
+    if provider == "google":
+        return ChatGoogleGenerativeAI(
+            model=model_name,
+            temperature=0,
+        )
+
+    if provider == "openrouter":
+        return ChatOpenRouter(
+            model=model_name,
+            temperature=0,
+        )
+
+    raise ValueError(f"Unsupported model provider: {provider}")
 
 def _parse_yaml_agent_config_file(config_filename: str) -> AgentConfig:
 

@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field, HttpUrl
 class AgentConfig(BaseModel):
     name: str
     model: str
+    model_provider: str
     reasoning_effort: Literal["none", "minimal", "low", "medium", "high", "xhigh"]
     tools: list[BaseTool]
     system_prompt_path: Path
