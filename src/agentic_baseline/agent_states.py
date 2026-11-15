@@ -9,3 +9,8 @@ from langchain.agents import AgentState
 
 class GeneralAgentState(AgentState):
     pass
+
+class ResearcherAgentState(AgentState):
+    """State for the local document research agent."""
+
+    pass

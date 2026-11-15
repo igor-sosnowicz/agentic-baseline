@@ -3,6 +3,10 @@ from langchain.tools import tool
 from agentic_baseline.data_types import Website
 from agentic_baseline.tools.access_website import access_website_tool
 from agentic_baseline.tools.find_websites import find_websites_tool
+from agentic_baseline.tools.documents import (
+    search_documents,
+    read_document,
+)
 
 
 # Mandatory docstring because they're used by agents.
@@ -37,4 +41,6 @@ def access_website(url: str) -> str:
 __all__ = [
     "access_website",
     "find_websites",
+    "search_documents",
+    "read_document",
 ]

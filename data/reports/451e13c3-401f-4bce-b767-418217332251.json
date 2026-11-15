@@ -1,0 +1,13 @@
+{
+    "title": "Test report",
+    "summary": "This is a test report.",
+    "findings": [
+        {
+            "title": "Test finding",
+            "description": "Testing JSON report generation.",
+            "source_ids": []
+        }
+    ],
+    "sources": [],
+    "created_at": "2026-11-15T10:53:26.165542Z"
+}

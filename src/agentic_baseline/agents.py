@@ -13,6 +13,9 @@ from loguru import logger
 
 from agentic_baseline.constants import AGENTS_CONFIGURATION_DIRECTORY
 from agentic_baseline.data_types import AgentConfig
+from dotenv import load_dotenv
+
+load_dotenv()
 
 async def build_agent(
     agent_config: AgentConfig | str,
