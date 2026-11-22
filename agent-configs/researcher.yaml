@@ -1,9 +1,0 @@
-name: researcher
-model_provider: google
-model: gemini-2.5-flash
-reasoning_effort: medium
-tools:
-  - search_documents
-  - read_document
-system_prompt_path: ./prompts/researcher.md
-agent_state: ResearcherAgentState

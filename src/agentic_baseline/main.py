@@ -1,39 +1,64 @@
-
+import argparse
 import asyncio
 
 from dotenv import load_dotenv
-from langchain_core.messages import AIMessage
-
 from loguru import logger
 
-from agentic_baseline.agents import build_agent
+from agentic_baseline.experiments.runner import run_baseline #only baseline for now
 
 
-async def main() -> None:
+async def async_main(args):
     load_dotenv()
 
-    agent = await build_agent("general-purpose")
-
-    response = await agent.ainvoke(
-        {
-            "messages": [
-                {
-                    "role": "user",
-                    "content": (
-                        "Find LangGraph documentation and then "
-                        "open one of found pages and create a short brief "
-                        "use its content. Use available tools."
-                    ),
-                }
-            ]
-        }
+    result = await run_baseline(
+        task=args.task,
+        instance_id=args.instance,
     )
 
-    for message in reversed(response["messages"]):
-        if isinstance(message, AIMessage) and not message.tool_calls:
-            logger.info(message.text)
-            break
+    logger.info(
+        "Experiment completed: {}",
+        result["run_id"],
+    )
+
+    logger.info(
+        "Duration: {} ms",
+        result["total_duration_ms"],
+    )
+
+    logger.info(
+        "Model calls: {}",
+        result["model_calls"],
+    )
+
+    logger.info(
+        "Tool calls: {}",
+        result["tool_calls"],
+    )
+
+
+def main():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "--experiment",
+        default="baseline",
+        choices=["baseline"],
+    )
+
+    parser.add_argument(
+        "--instance",
+        required=True,
+    )
+
+    parser.add_argument(
+        "--task",
+        required=True,
+    )
+
+    args = parser.parse_args()
+
+    asyncio.run(async_main(args))
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

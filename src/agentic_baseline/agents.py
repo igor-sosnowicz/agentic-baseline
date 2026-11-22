@@ -15,6 +15,12 @@ from agentic_baseline.constants import AGENTS_CONFIGURATION_DIRECTORY
 from agentic_baseline.data_types import AgentConfig
 from dotenv import load_dotenv
 
+from agentic_baseline.monitoring.callbacks import (
+    ExperimentCallbackHandler,
+)
+from agentic_baseline.monitoring.context import RunContext
+from agentic_baseline.monitoring.events import EventLogger
+
 load_dotenv()
 
 async def build_agent(
@@ -36,7 +42,9 @@ async def build_agent(
         CompiledStateGraph: An AI agent constructed according to the configuration.
     """
     if isinstance(agent_config, str):
-        agent_config = _parse_yaml_agent_config_file(config_filename=agent_config)
+        agent_config = load_agent_config(
+            config_filename=agent_config
+        )
 
     reasoning = (
         {"effort": agent_config.reasoning_effort}
@@ -77,7 +85,7 @@ def _build_chat_model(agent_config: AgentConfig):
 
     raise ValueError(f"Unsupported model provider: {provider}")
 
-def _parse_yaml_agent_config_file(config_filename: str) -> AgentConfig:
+def load_agent_config(config_filename: str) -> AgentConfig:
 
     with open(AGENTS_CONFIGURATION_DIRECTORY / f"{config_filename}.yaml") as file:
         data = yaml.safe_load(file)

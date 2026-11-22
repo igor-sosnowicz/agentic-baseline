@@ -5,5 +5,8 @@ reasoning_effort: medium
 tools:
   - find_websites
   - access_website
+  - search_documents
+  - read_document
+  - save_report
 system_prompt_path: ./prompts/general-purpose.md
 agent_state: GeneralAgentState # A class name from `agentic_baseline.agent_states`.

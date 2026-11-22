@@ -7,6 +7,7 @@ from agentic_baseline.tools.documents import (
     search_documents,
     read_document,
 )
+from agentic_baseline.tools.report import save_report
 
 
 # Mandatory docstring because they're used by agents.
@@ -43,4 +44,5 @@ __all__ = [
     "find_websites",
     "search_documents",
     "read_document",
+    "save_report",
 ]
