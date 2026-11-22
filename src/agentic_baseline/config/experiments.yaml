@@ -1,0 +1,48 @@
+active_experiment: baseline
+
+experiments:
+  baseline:
+    decomposition: none
+    delegation: disabled
+    execution: parallel
+
+    agents:
+      - general_purpose
+
+    subagents: {}
+
+  high_level:
+    decomposition: high
+    delegation: disabled
+    execution: parallel
+
+    agents:
+      - argument_finder
+      - argument_analyst
+      - finaliser
+
+    subagents: {}
+
+  low_level:
+    decomposition: low
+    delegation: explicit
+    execution: parallel
+
+    agents:
+      - argument_finder
+      - argument_analyst
+      - finaliser
+
+    subagents:
+      argument_finder:
+        - claim_finder
+        - evidence_matcher
+        - argument_combiner
+
+      argument_analyst:
+        - stylist
+        - framer
+
+      finaliser:
+        - stylist
+        - deduplicator
